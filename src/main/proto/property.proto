@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package serviceannonce;
+
+// =========================
+// ==== ENTITY MODELS ======
+// =========================
+
+// ---------- Photo ----------
+message PhotoMessage {
+  int64 id = 1;
+  string url = 2;
+  string description = 3;
+}
+
+// ---------- Room ----------
+message RoomMessage {
+  int64 id = 1;
+  string name = 2;
+  int32 capacity = 3;
+  double price = 4;
+}
+
+// ---------- Property ----------
+message PropertyMessage {
+  int64 id = 1;
+  string adresse = 2;
+  string ville = 3;
+  double latitude = 4;
+  double longitude = 5;
+  string description = 6;
+  string rules = 7;
+  int64 proprietaireId = 8;
+
+  // Relations
+  repeated RoomMessage rooms = 9;
+  repeated PhotoMessage photos = 10;
+}
+
+// =============================
+// ====== REQUEST MODELS =======
+// =============================
+message Empty {}
+
+message PropertyIdRequest {
+  int64 id = 1;
+}
+
+message CreatePropertyRequest {
+  string adresse = 1;
+  string ville = 2;
+  double latitude = 3;
+  double longitude = 4;
+  string description = 5;
+  string rules = 6;
+  int64 proprietaireId = 7;
+}
+
+message UpdatePropertyRequest {
+  int64 id = 1;
+  string adresse = 2;
+  string ville = 3;
+  double latitude = 4;
+  double longitude = 5;
+  string description = 6;
+  string rules = 7;
+  int64 proprietaireId = 8;
+}
+
+// Response for list
+message PropertyListResponse {
+  repeated PropertyMessage properties = 1;
+}
+
+// =============================
+// ====== SERVICE API ==========
+// =============================
+
+service PropertyService {
+
+  rpc GetAll (Empty) returns (PropertyListResponse);
+
+  rpc GetById (PropertyIdRequest) returns (PropertyMessage);
+
+  rpc Create (CreatePropertyRequest) returns (PropertyMessage);
+
+  rpc Update (UpdatePropertyRequest) returns (PropertyMessage);
+
+  rpc Delete (PropertyIdRequest) returns (Empty);
+}
